@@ -1,0 +1,208 @@
+package com.exa.fetch;
+
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.R.string;
+import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class details extends ActionBarActivity {
+	String resp,s,messname,emailpassed;
+	Integer flag;
+	protected static String url="your url .php";
+	TextView m_name, m_thali_rate, o_name, o_contact_no, o_address, o_email_id, bg, vn;
+	JSONObject json=new JSONObject();
+	RatingBar ratings;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.details);
+	try
+	{
+		 Bundle extras = getIntent().getExtras();
+	        if (extras != null) {
+					messname =extras.getString("messname");
+	        }
+		System.out.println(""+json.toString());
+		m_name=(TextView)findViewById(R.id.m_name);
+		ratings=(RatingBar)findViewById(R.id.ratings);
+		m_thali_rate=(TextView)findViewById(R.id.m_thali_rate);
+		o_name=(TextView)findViewById(R.id.o_name);
+		o_contact_no=(TextView)findViewById(R.id.o_contact_no);
+		o_address=(TextView)findViewById(R.id.o_address);
+		o_email_id=(TextView)findViewById(R.id.o_email_id);
+		bg=(TextView)findViewById(R.id.bg);
+		vn=(TextView)findViewById(R.id.vn);
+		new call().execute(url);
+		 final Button ratereview = (Button) findViewById(R.id.ratereview);
+			ratereview.setOnClickListener
+				(
+					new Button.OnClickListener() 
+						{
+							public void onClick(View v)
+							{	System.out.println("before start of an intent "+emailpassed);
+								Intent rateit=new Intent(details.this,ratingreview.class);
+								rateit.putExtra("email",emailpassed);
+								startActivity(rateit);
+							}
+						}
+				);
+			
+	}
+	catch(Exception e)
+	{
+		System.out.println("the error is "+e.toString());
+	}
+	}
+	private class call extends AsyncTask<String,Void,JSONObject>
+    {
+    	 protected void onPreExecute() {
+    	        Toast.makeText(getApplicationContext(), "Starting",
+    	                Toast.LENGTH_LONG).show();
+    	    }
+
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			
+			
+	 	try
+    	{
+	 		System.out.println("why why why");
+    		HttpClient httpclient=new DefaultHttpClient();
+    		HttpGet get = new HttpGet(url);
+    		//HttpPost httppost=new HttpPost(url);
+    		System.out.println(get);
+    		HttpResponse response=httpclient.execute(get);
+    		System.out.println(response.toString());
+    		HttpEntity entity=response.getEntity();
+    		resp=EntityUtils.toString(entity);
+    		System.out.println(resp);
+    		System.out.println("\n\n\nhello\n\n\n");
+    	}
+    	catch(Exception e)
+    	{
+    		Log.e("log_tag","Error in http connection "+e.toString());
+    	}
+    	try
+    	{
+    		    		JSONArray jarray=new JSONArray(resp);
+    		    		System.out.println("why why");
+    		for(int i=0;i<jarray.length();i++)
+    		{		
+    				json=jarray.getJSONObject(i);
+    				if (messname.equals(json.getString("m_name")))
+    				{
+    					System.out.println("i am here 2");
+        				
+    					
+    					break;
+    				}
+
+    		}
+    		    	
+    	}
+    	catch(Exception e)
+    	{
+    		Log.e("log_tag","error parsing data"+e.toString());
+    	}
+    	System.out.println("i am here before return");
+    	//	return null;
+		return json;
+		}
+		
+
+		  
+	    protected void onPostExecute(JSONObject json) {
+	    try	
+	    {
+	    	System.out.println("Mess Name:"+json.getString("m_name"));
+			m_name.setText("Mess Name: "+json.getString("m_name"));
+			ratings.setRating(Float.parseFloat(json.getString("ratings")));
+			m_thali_rate.setText("Thali rate: "+json.getString("m_thali_rate"));
+			o_name.setText("Mess Owner: "+json.getString("o_name"));
+			o_contact_no.setText("Contact No.: "+json.getString("o_contact_no"));
+			o_address.setText("Address: "+json.getString("o_address"));
+			o_email_id.setText("Email ID: "+json.getString("o_email_id"));
+			emailpassed=json.getString("o_email_id");
+			if(json.getString("b_g").equals("b"))
+			bg.setText("Only for: Boys");
+			else if(json.getString("b_g").equals("g"))
+				bg.setText("Only for: Girls");
+			else if(json.getString("b_g").equals("bg"))
+				bg.setText("for: Boys and girls");
+			
+			if(json.getString("v_n").equals("v"))
+				vn.setText("Type: Veg");
+			else if(json.getString("v_n").equals("n"))
+				vn.setText("Type: Non Veg");
+			else if(json.getString("v_n").equals("vn"))
+				vn.setText("Type: veg and non veg");
+			
+			
+	    	
+	    }
+	    catch(Exception e)
+	    {}
+	    /*resultview.setText(s);
+	    	 System.out.println("in post");
+			  if (flag==1)
+		        {
+				  System.out.println("i am here 3");
+				  resultview.setText("yahooo");
+		            Toast.makeText(getApplicationContext(), "Sucessful login",
+			                Toast.LENGTH_LONG).show();
+		        	Intent locate=new Intent(MainActivity.this,location.class);
+					startActivity(locate);
+		            
+		        }
+		        else
+		        {
+		        	System.out.println("i am here 4");
+					resultview.setText("boooo");
+		            Toast.makeText(getApplicationContext(), "Not sucess",
+			                Toast.LENGTH_LONG).show();
+		        }
+	      */  Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+	  
+	    }
+
+    }
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+}

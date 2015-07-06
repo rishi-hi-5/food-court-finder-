@@ -1,0 +1,223 @@
+package com.exa.fetch;
+
+
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+//import com.exa.fetch.MainActivity.call;
+
+import android.content.Entity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Toast;
+
+
+public class register extends ActionBarActivity {
+	EditText Firstname,lastname,contact,area,password,email;
+	//RadioGroup radiocust;
+	String rado;
+	Integer flag=0;
+	//RadioButton rbutton;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+    	try{
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.register);
+        System.out.println("hello");
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+        Firstname=(EditText) findViewById(R.id.Firstname);
+        lastname=(EditText) findViewById(R.id.lastname);
+        contact=(EditText)findViewById(R.id.contact);
+        area=(EditText)findViewById(R.id.area);
+        password=(EditText)findViewById(R.id.password);
+      //  radiocust = (RadioGroup) findViewById(R.id.custradio);
+        email=(EditText)findViewById(R.id.email);
+        
+        //rbutton = (Button) findViewById(R.id.btnDisplay);
+        final Button save = (Button) findViewById(R.id.save);
+		save.setOnClickListener
+			(
+				new Button.OnClickListener() 
+					{
+						public void onClick(View v)
+						{
+					
+							try {
+				                Class.forName("android.os.AsyncTask");
+				            } catch (ClassNotFoundException e) {
+				                // TODO Auto-generated catch block
+				                e.printStackTrace();
+				            }
+							new registeractivity().execute();
+						}
+					}
+			);
+		  //RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
+
+
+	  /*      radiocust.setOnCheckedChangeListener(new OnCheckedChangeListener() 
+	        {
+	            public void onCheckedChanged(RadioGroup group, int checkedId) {
+	                switch(checkedId){
+	                    case R.id.student:
+	                        // do operations specific to this selection
+	                    	rado="student";
+	                    break;
+
+	                    case R.id.messowner:
+	                        // do operations specific to this selection
+	                    	rado="messowner";
+	                    break;
+
+	                }
+
+
+	            }
+	        });*/
+    	}
+    	catch(Exception e)
+    	{
+    		System.out.println(" error"+e.toString());
+    	}
+    }
+    
+
+
+	public final static boolean isValidEmail(CharSequence target) {
+	    if (target == null) {
+	        return false;
+	    } else {
+	        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+	    }
+	}
+
+
+    private class registeractivity extends AsyncTask<String,Void,Integer>
+    {
+    	 protected void onPreExecute() {
+    	        Toast.makeText(getApplicationContext(), "Starting",
+    	                Toast.LENGTH_LONG).show();
+    	    }
+    	 
+    	    protected  Integer doInBackground(String... params) {
+    	        try {
+    	        	// JSONObject jsonobj = new JSONObject();
+    	        	// JSONArray postjson=new JSONArray();
+    	        	// String json="";
+    	        	// String result="";
+    	        	HttpClient httpclient = new DefaultHttpClient();
+    	            HttpPost httppost = new HttpPost("http://rishikesh.byethost5.com/input.php");
+    	            //System.out.println("i am here");
+    	           /* jsonobj.put("Firstname",Firstname.getText().toString()); 
+	                jsonobj.put("lastname",lastname.get	Text().toString());
+	                
+	                System.out.println(""+jsonobj.toString());
+	            	 */
+
+    	            try {
+    	            	flag=0;
+    	            	 List<NameValuePair> data= new ArrayList<NameValuePair>(6);
+    	                  data.add(new BasicNameValuePair("c_name",Firstname.getText().toString()+" "+lastname.getText().toString()));
+    	                  //data.add(new BasicNameValuePair("lastname",lastname.getText().toString()));
+    	                  if(isValidEmail(email.getText().toString()))
+    	                  {
+    	                	  data.add(new BasicNameValuePair("c_email_id",email.getText().toString()));
+    	                  }
+    	                  else
+    	                  {
+    	                	  flag=1;
+    	                  }
+    	                  if(flag==0)
+    	                  {
+    	                  data.add(new BasicNameValuePair("c_contact_no",contact.getText().toString()));
+    	                  data.add(new BasicNameValuePair("c_area",area.getText().toString()));
+    	                 // data.add(new BasicNameValuePair("c_profession",rado));
+    	                  data.add(new BasicNameValuePair("c_password",password.getText().toString()));
+    	                  httppost.setEntity(new UrlEncodedFormEntity(data));
+    	                  System.out.println(""+data);
+    	                 
+                          HttpResponse rs=httpclient.execute(httppost);
+    	                  }
+    	            	} 	
+    	            	catch (Exception e) 
+    	            		{
+    	            		// TODO Auto-generated catch block
+    	            		}
+    	            }
+    	        	catch (Exception e) {
+    	                // TODO Auto-generated catch block
+    	            }
+    	        
+    	        return flag;
+    	    }
+    	 
+    	   protected void onPostExecute(Integer i) {
+    			  System.out.println("i am here"+i);
+   	    	if(i==1)
+   	    	{
+   	    		Toast.makeText(getApplicationContext(), "Invalid email ID", Toast.LENGTH_LONG).show();
+   	      	  
+   	    	}
+   	    	else
+   	    	{
+   	        Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+   	    	}
+   	    }
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+ 
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mess" >
+
+    <Button
+        android:id="@+id/mess_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/student"
+        android:layout_marginLeft="85dp"
+        android:layout_marginTop="40dp"
+        android:text="Mess owner" />
+
+    <Button
+        android:id="@+id/student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mess_owner"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/mess_owner"
+        android:layout_marginTop="133dp"
+        android:text="Student" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="72dp"
+        android:text="select user"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

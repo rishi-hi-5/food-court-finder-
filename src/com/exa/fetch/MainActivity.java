@@ -1,0 +1,290 @@
+package com.exa.fetch;
+
+//import java.io.BufferedReader;
+//import java.io.InputStream;
+//import java.io.InputStreamReader;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+//import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+
+//import android.R.integer;
+//import android.R.string;
+import android.support.v7.app.ActionBarActivity;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+
+@SuppressLint("NewApi") public class MainActivity extends ActionBarActivity {
+
+	TextView resultview;
+	String s,user;
+	protected static String url1="your url.php";
+	protected static String url2="your url.php";
+	
+	//change the url for login by creating php different for both student and mess owner
+	String resp,sendstring;
+	Integer flag=0;
+	EditText email,password;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+             user = extras.getString("user");
+        }
+       
+        System.out.println("i "+user);
+        StrictMode.enableDefaults();
+        resultview=(TextView) findViewById(R.id.result); 
+        email=(EditText) findViewById(R.id.Name);
+        password=(EditText) findViewById(R.id.Password);
+        final Button login = (Button) findViewById(R.id.login);
+		login.setOnClickListener
+			(
+				new Button.OnClickListener() 
+					{
+						public void onClick(View v)
+						{
+					
+							try {
+				                Class.forName("android.os.AsyncTask");
+				            } catch (ClassNotFoundException e) {
+				                // TODO Auto-generated catch block
+				                e.printStackTrace();
+				            }
+							flag=0;
+							if(user.equals("student"))
+							new call().execute(url1);
+							if(user.equals("mess_owner"))
+							new call().execute(url2);
+								
+						}
+					}
+			);
+		
+			final Button regis=(Button) findViewById(R.id.register);
+			regis.setOnClickListener
+				(
+						new Button.OnClickListener() 
+						{
+							public void onClick(View v)
+							{
+								try{
+									if(user.equals("student"))
+									{
+										Intent regscreen=new Intent(MainActivity.this,register.class);
+										startActivity(regscreen);
+									}
+									else
+									{
+										Intent owner_reg=new Intent(MainActivity.this,registerowner.class);
+										startActivity(owner_reg);
+									}
+								}
+								catch(Exception e)
+								{
+									System.out.println("error "+e.toString());
+								}
+							}
+						}	
+					
+				);
+			
+	/*		
+			final Button map=(Button) findViewById(R.id.trymap);
+			map.setOnClickListener
+				(
+						new Button.OnClickListener() 
+						{
+							public void onClick(View v)
+							{
+								try{
+									Intent mapscreen=new Intent(MainActivity.this,map.class);
+									//Intent i = new Intent(getApplicationContext(), NewActivity.class);
+									mapscreen.putExtra("address","pune,maharashtra");
+									//startActivity(i);
+									startActivity(mapscreen);
+								}
+								catch(Exception e)
+								{
+									System.out.println("error "+e.toString());
+								}
+							}
+						}	
+					
+				);*/
+			
+    }
+    private class call extends AsyncTask<String,Void,Integer>
+    {
+    	HttpClient httpclient;
+    	HttpGet get;
+    	 protected void onPreExecute() {
+    	        Toast.makeText(getApplicationContext(), "Starting",
+    	                Toast.LENGTH_LONG).show();
+    	    }
+
+		@Override
+		protected Integer doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			
+				
+	    	try
+	    	{
+	    		if(user.equals("student"))
+	    		{
+	    			System.out.println("wowee");
+		    		httpclient=new DefaultHttpClient();
+		    		 get= new HttpGet(url1);
+		    	}
+	    		else
+	    		{
+	    			System.out.println("wowee");
+	    			httpclient=new DefaultHttpClient();
+	    			get = new HttpGet(url2);
+	        	
+	    		}
+	    		//HttpPost httppost=new HttpPost(url);
+	    		System.out.println(get);
+	    		HttpResponse response=httpclient.execute(get);
+	    		System.out.println(response.toString());
+	    		HttpEntity entity=response.getEntity();
+	    		resp=EntityUtils.toString(entity);
+	    		System.out.println(resp);
+	    	//	isr=entity.getContent();
+	    		System.out.println("\n\n\nhello\n\n\n");
+	    	}
+	    	catch(Exception e)
+	    	{
+	    		Log.e("log_tag","Error in http connection "+e.toString());
+	    		resultview.setText("couldnt found connection");
+	    	}
+	    	try
+	    	{
+	    		s="";
+	    		JSONObject json=new JSONObject();
+	    		JSONArray jarray=new JSONArray(resp);
+	    		for(int i=0;i<jarray.length();i++)
+	    		{
+	    				System.out.println("i am here 1"+email.getText().toString()+" "+password.getText().toString());
+	    				
+	    				json=jarray.getJSONObject(i);
+	    				if(user.equals("student"))
+	    				{
+	    					s = s + "Name : "+json.getString("c_email_id")+" "+json.getString("c_password")+"\n\n";
+		    				if ((email.getText().toString()).equals(json.getString("c_email_id"))&&(password.getText().toString()).equals(json.getString("c_password")))
+		    				{
+		    					System.out.println("i am here 2");
+		        				sendstring=email.getText().toString();
+		    					
+		    					flag=1;
+		    					break;
+		    				}
+	    				}
+	    				else
+	    				{
+	    					s = s + "Name : "+json.getString("o_email_id")+" "+json.getString("o_password")+"\n\n";
+		    				if ((email.getText().toString()).equals(json.getString("o_email_id"))&&(password.getText().toString()).equals(json.getString("o_password")))
+		    				{
+		    					System.out.println("i am here 2");
+		        				
+		    					
+		    					flag=1;
+		    					break;
+		    				}
+	    				
+	    					
+	    				}
+		    				
+	    		}
+	    	
+	    	}
+	    	catch(Exception e)
+	    	{
+	    		Log.e("log_tag","error parsing data"+e.toString());
+	    	}
+    		System.out.println("i am here before return");
+    		return flag;
+		}
+		
+
+		  
+	    protected void onPostExecute(Integer flag) {
+	  
+	    	resultview.setText(s);
+	    	 System.out.println("in post");
+			  if (flag==1)
+		        {
+				  System.out.println("i am here 3");
+				  resultview.setText("successful login");
+		            Toast.makeText(getApplicationContext(), "Sucessful login",
+			                Toast.LENGTH_LONG).show();
+		            if(user.equals("student"))
+		            {
+		        	Intent locate=new Intent(MainActivity.this,location.class);
+					startActivity(locate);
+		            }
+		            else
+		            {
+		            	System.out.println("wowee");
+		            	System.out.println("done1");
+		            	Intent update_menu=new Intent(MainActivity.this,updatemenu.class);
+		            	System.out.println("done2");
+		            	update_menu.putExtra("accept",sendstring);
+		            	System.out.println("done3");
+		            	startActivity(update_menu);
+			            	
+		            }
+		            
+		        }
+		        else
+		        {
+		        	System.out.println("i am here 4");
+					resultview.setText("not success");
+		            Toast.makeText(getApplicationContext(), "Not sucess",
+			                Toast.LENGTH_LONG).show();
+		        }
+	        Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+	  
+	    }
+
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

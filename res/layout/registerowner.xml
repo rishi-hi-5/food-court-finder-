@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:context="com.exa.fetch.MainActivity"
+        android:background="@drawable/mess" >
+
+        <EditText
+            android:id="@+id/Firstname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="First Name"
+            android:inputType="textPersonName" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/lastname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/editText1"
+            android:layout_below="@+id/editText1"
+            android:layout_marginTop="24dp"
+            android:hint="Last Name"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="Contact no"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/area"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="Area" />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="Email-Id"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/messname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="Mess Name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="Enter Password"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/onlyone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Only For"
+            android:layout_marginTop="24dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	         <RadioGroup
+	            android:id="@+id/boygirlradio"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+	
+	            <RadioButton
+	                android:id="@+id/boy"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:checked="true"
+	                android:text="boy" />
+	
+	            <RadioButton
+	                android:id="@+id/girl"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="girl" />
+	
+	            <RadioButton
+	                android:id="@+id/co_ed"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="co ed" />
+	        </RadioGroup>
+        
+         <TextView
+            android:id="@+id/typeoffood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type of Food"
+            android:layout_marginTop="24dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	         <RadioGroup
+	            android:id="@+id/foodtyperadio"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+	
+	            <RadioButton
+	                android:id="@+id/veg"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:checked="true"
+	                android:text="Veg" />
+	
+	            <RadioButton
+	                android:id="@+id/nonveg"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Non Veg" />
+	
+	            <RadioButton
+	                android:id="@+id/both"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Veg/Non veg" />
+	        </RadioGroup>
+
+	         <EditText
+	             android:id="@+id/thalirate"
+	             android:layout_width="match_parent"
+	             android:layout_height="wrap_content"
+	             android:ems="10"
+	             android:hint="Thali Rate"
+           		 android:layout_marginTop="24dp"
+	             android:inputType="number" />
+        
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="save" />
+
+       
+
+    </LinearLayout>
+
+  </ScrollView>
